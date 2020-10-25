@@ -1,4 +1,5 @@
 import pandas as pd
+import pycountry as pyc
  
 originalData = pd.read_csv("drive/My Drive/data-mining/Hotel Booking Demand/hotel_bookings.csv")
 data = originalData.copy()
@@ -19,8 +20,13 @@ data[["agent", "children", "company"]] = data[["agent", "children", "company"]].
  
 
 # Functions
-def calculation(column):
-  column = column.value_counts()
+def calculation(column, limit=None):
+  
+  if limit != None:
+    column = column.value_counts()[:limit]
+  else:
+    column = column.value_counts()
+
   x = column.index #unique tuple list
   y = (column/column.sum())*100 #unique tuple percentage
   return x.values, y.values
@@ -77,4 +83,30 @@ data = data[data['is_canceled']==0]
 #     ylabel="Booking Percentage (%)",
 #     title="Comparison of Booking by Year"
 # );
+
+
+
+
+# Comparison of Booking by Country
+# x, y = calculation(data.country, limit=10);
+# x = [pyc.countries.get(alpha_3=code).name for code in x]
+
+# graph = pd.DataFrame({
+#     "Country": x,
+#     "Percentage": y
+# });
+# graph.plot.bar(
+#     x="Country",
+#     y="Percentage",
+#     xlabel="Country",
+#     ylabel="Booking Percentage (%)",
+#     title="Comparison of Booking by Country"
+# );
+
+
+
+
+
+
+
 
