@@ -1,46 +1,80 @@
 import pandas as pd
-
+ 
 originalData = pd.read_csv("drive/My Drive/data-mining/Hotel Booking Demand/hotel_bookings.csv")
 data = originalData.copy()
-
+ 
 #print(data.isnull().sum().sort_values(ascending=False)) #how many data are missing?
 #print(data[(data.adults+data.babies+data.children)==0].shape) #how many rooms were book but no guest attend
+ 
+ 
 
-
-'''******************
-Data Preprocessing
-******************'''
+# Data Preprocessing
 data["agent"].fillna(round(originalData.agent.mean()), inplace=True) #replace all NaN value of agent by mean
 data["company"].fillna(round(originalData.company.mean()), inplace=True) #replace all NaN value of company by mean
 data["children"].fillna(round(originalData.children.mean()), inplace=True) #replace all NaN value of children by mean
 data["country"].fillna(originalData.country.mode().to_string(), inplace=True) #replace all NaN value of country by mode (that appear most)
 data = data.drop(data[(data.adults+data.babies+data.children)==0].index) #drop the tuples which room has no guest after booking
 data[["agent", "children", "company"]] = data[["agent", "children", "company"]].astype("int64") #convert DataType from float64 -> int64
+ 
+ 
 
-
-'''******************
-Functions
-******************'''
+# Functions
 def calculation(column):
   column = column.value_counts()
   x = column.index #unique tuple list
   y = (column/column.sum())*100 #unique tuple percentage
   return x.values, y.values
+ 
+ 
+ 
+
+# Comparison of Booking Ratio
+
+# x, y = calculation(data.is_canceled);
+# graph = pd.DataFrame({
+#     "Cancel": x,
+#     "Percentage": y
+# });
+# graph.plot.bar(
+#     x="Cancel",
+#     y="Percentage",
+#     xlabel="Booking Cancelled (No = 0, Yes = 1)",
+#     ylabel="Booking Percentage (%)",
+#     title="Comparison of Booking Ratio"
+# );
+
+
+data = data[data['is_canceled']==0]
+
+# Comparison of Booking by Hotel Type
+
+# x, y = calculation(data.hotel);
+# graph = pd.DataFrame({
+#     "Hotel": x,
+#     "Percentage": y
+# });
+# graph.plot.bar(
+#     x="Hotel",
+#     y="Percentage",
+#     xlabel="Hotel",
+#     ylabel="Booking Percentage (%)",
+#     title="Comparison of Booking by Hotel Type"
+# );
 
 
 
-'''******************
-How Many Booking Were Cancelled?
-******************'''
-x, y = calculation(data.is_canceled);
-graph = pd.DataFrame({
-    "Cancel": x,
-    "Percentage": y
-});
-graph.plot.bar(
-    x="Cancel",
-    y="Percentage",
-    xlabel="Booking Cancelled (No = 0, Yes = 1)",
-    ylabel="Booking Percentage (%)",
-    title="Canceled vs Not Canceled Ratio"
-);
+# Comparison of Booking by Year
+
+# x, y = calculation(data.arrival_date_year);
+# graph = pd.DataFrame({
+#     "Year": x,
+#     "Percentage": y
+# });
+# graph.plot.bar(
+#     x="Year",
+#     y="Percentage",
+#     xlabel="Year",
+#     ylabel="Booking Percentage (%)",
+#     title="Comparison of Booking by Year"
+# );
+
