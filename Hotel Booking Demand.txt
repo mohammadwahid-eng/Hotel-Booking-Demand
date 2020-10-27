@@ -106,7 +106,22 @@ data = data[data['is_canceled']==0]
 
 
 
+# Comparison of Booking by Month
+months_name = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+months_data = data.arrival_date_month.value_counts().reindex(months_name); #Sorted By Months Name
 
+x = months_data.index
+y = (months_data/months_data.sum())*100
 
-
+graph = pd.DataFrame({
+    "Month": x,
+    "Percentage": y
+});
+graph.plot.line(
+    x="Month",
+    y="Percentage",
+    xlabel="Month",
+    ylabel="Booking Percentage (%)",
+    title="Comparison of Booking by Month"
+);
 
