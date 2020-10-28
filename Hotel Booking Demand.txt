@@ -1,27 +1,26 @@
 import pandas as pd
 import pycountry as pyc
  
-originalData = pd.read_csv("drive/My Drive/data-mining/Hotel Booking Demand/hotel_bookings.csv")
-data = originalData.copy()
+data = pd.read_csv("drive/My Drive/data-mining/Hotel Booking Demand/hotel_bookings.csv")
+booking = data.copy()
  
-#print(data.isnull().sum().sort_values(ascending=False)) #how many data are missing?
-#print(data[(data.adults+data.babies+data.children)==0].shape) #how many rooms were book but no guest attend
+#print(booking.isnull().sum().sort_values(ascending=False)) #how many data are missing?
+#print(booking[(booking.adults+booking.babies+booking.children)==0].shape) #how many rooms were book but no guest attend
  
  
 
 # Data Preprocessing
-data["agent"].fillna(round(originalData.agent.mean()), inplace=True) #replace all NaN value of agent by mean
-data["company"].fillna(round(originalData.company.mean()), inplace=True) #replace all NaN value of company by mean
-data["children"].fillna(round(originalData.children.mean()), inplace=True) #replace all NaN value of children by mean
-data["country"].fillna(originalData.country.mode().to_string(), inplace=True) #replace all NaN value of country by mode (that appear most)
-data = data.drop(data[(data.adults+data.babies+data.children)==0].index) #drop the tuples which room has no guest after booking
-data[["agent", "children", "company"]] = data[["agent", "children", "company"]].astype("int64") #convert DataType from float64 -> int64
+booking.agent.fillna(round(data.agent.mean()), inplace=True) #replace all NaN value of agent by mean
+booking.company.fillna(round(data.company.mean()), inplace=True) #replace all NaN value of company by mean
+booking.children.fillna(round(data.children.mean()), inplace=True) #replace all NaN value of children by mean
+booking.country.fillna(data.country.mode().to_string(), inplace=True) #replace all NaN value of country by mode (that appear most)
+booking = booking.drop(booking[(booking.adults+booking.babies+booking.children)==0].index) #drop the tuples which room has no guest after booking
+booking[["agent", "children", "company"]] = booking[["agent", "children", "company"]].astype("int64") #convert DataType from float64 -> int64
  
  
 
 # Functions
-def calculation(column, limit=None):
-  
+def calculation(column, limit=None):  
   if limit != None:
     column = column.value_counts()[:limit]
   else:
@@ -30,98 +29,67 @@ def calculation(column, limit=None):
   x = column.index #unique tuple list
   y = (column/column.sum())*100 #unique tuple percentage
   return x.values, y.values
- 
- 
- 
-
-# Comparison of Booking Ratio
-
-# x, y = calculation(data.is_canceled);
-# graph = pd.DataFrame({
-#     "Cancel": x,
-#     "Percentage": y
-# });
-# graph.plot.bar(
-#     x="Cancel",
-#     y="Percentage",
-#     xlabel="Booking Cancelled (No = 0, Yes = 1)",
-#     ylabel="Booking Percentage (%)",
-#     title="Comparison of Booking Ratio"
-# );
 
 
-data = data[data['is_canceled']==0]
-
-# Comparison of Booking by Hotel Type
-
-# x, y = calculation(data.hotel);
-# graph = pd.DataFrame({
-#     "Hotel": x,
-#     "Percentage": y
-# });
-# graph.plot.bar(
-#     x="Hotel",
-#     y="Percentage",
-#     xlabel="Hotel",
-#     ylabel="Booking Percentage (%)",
-#     title="Comparison of Booking by Hotel Type"
-# );
+def showGraph(x, y, xLabel, mTitle):
+  mGraph = pd.DataFrame({
+    "Name" : x,
+    "Percentage" : y
+  }).plot.bar(
+    x = "Name",
+    y = "Percentage",
+    xlabel = xLabel,
+    title = mTitle
+  );
 
 
 
-# Comparison of Booking by Year
+# isCanceled, bookingPercentage = calculation(booking.is_canceled);
+# showGraph(isCanceled, bookingPercentage, "Booking Cancelled (No = 0, Yes = 1)", "Ratio between booking canceled and not canceled.");
 
-# x, y = calculation(data.arrival_date_year);
-# graph = pd.DataFrame({
-#     "Year": x,
-#     "Percentage": y
-# });
-# graph.plot.bar(
-#     x="Year",
-#     y="Percentage",
-#     xlabel="Year",
-#     ylabel="Booking Percentage (%)",
-#     title="Comparison of Booking by Year"
-# );
+
+booking = booking[booking.is_canceled==0]
+
+
+# hotelTypes, bookingPercentage = calculation(data.hotel);
+# showGraph(hotelTypes, bookingPercentage, "Hotel Types", "Which type of hotel has demand?");
 
 
 
 
-# Comparison of Booking by Country
-# x, y = calculation(data.country, limit=10);
-# x = [pyc.countries.get(alpha_3=code).name for code in x]
-
-# graph = pd.DataFrame({
-#     "Country": x,
-#     "Percentage": y
-# });
-# graph.plot.bar(
-#     x="Country",
-#     y="Percentage",
-#     xlabel="Country",
-#     ylabel="Booking Percentage (%)",
-#     title="Comparison of Booking by Country"
-# );
+# bookingYears, bookingPercentage = calculation(data.arrival_date_year);
+# showGraph(bookingYears, bookingPercentage, "Booking Years", "Booking comparison by Year");
 
 
 
 
-# Comparison of Booking by Month
-months_name = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-months_data = data.arrival_date_month.value_counts().reindex(months_name); #Sorted By Months Name
+# countries, bookingPercentage = calculation(data.country, 10);
+# countrries = [pyc.countries.get(alpha_3=code).name for code in countries]
+# showGraph(countries, bookingPercentage, "Countries", "From which countries most guests come?");
 
-x = months_data.index
-y = (months_data/months_data.sum())*100
 
-graph = pd.DataFrame({
-    "Month": x,
-    "Percentage": y
-});
-graph.plot.line(
-    x="Month",
-    y="Percentage",
-    xlabel="Month",
-    ylabel="Booking Percentage (%)",
-    title="Comparison of Booking by Month"
-);
 
+
+# monthsName = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+# monthsData = booking.arrival_date_month.value_counts().reindex(monthsName);
+# bookingMonths = monthsData.index
+# bookingPercentage = (monthsData/monthsData.sum())*100
+# showGraph(bookingMonths, bookingPercentage, "Months", "Which is the busiest month for hotels?");
+
+
+
+
+# single = booking[(booking.adults==1) & (booking.children==0) & (booking.babies==0)]
+# couple = booking[(booking.adults==2) & (booking.children==0) & (booking.babies==0)]
+# family = booking[(booking.adults + booking.children + booking.babies) > 2]
+# accomodationTypes = ["Single", "Couple", "Family"]
+# accomodationCount = [single.shape[0], couple.shape[0], family.shape[0]]
+# bookingPercentage = [(total/booking.shape[0])*100 for total in accomodationCount]
+# showGraph(accomodationTypes, bookingPercentage, "Accomodation Types", "Which is the most booked accomodation type?");
+
+
+
+
+# nights = booking.stays_in_week_nights + booking.stays_in_weekend_nights
+# numberOfNights, stayingPercentage = calculation(nights, 10);
+# showGraph(numberOfNights, stayingPercentage, "Number of Nights", "How long guests stay in the hotel?");
