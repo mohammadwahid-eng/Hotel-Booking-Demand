@@ -39,7 +39,8 @@ def showGraph(x, y, xLabel, mTitle):
     x = "Name",
     y = "Percentage",
     xlabel = xLabel,
-    title = mTitle
+    title = mTitle,
+    figsize=(10, 6)
   );
 
 
@@ -63,8 +64,8 @@ booking = booking[booking.is_canceled==0]
 
 
 
-# countries, bookingPercentage = calculation(data.country, 10);
-# countrries = [pyc.countries.get(alpha_3=code).name for code in countries]
+# countries, bookingPercentage = calculation(booking.country, 10);
+# countries = [pyc.countries.get(alpha_3=code).name for code in countries]
 # showGraph(countries, bookingPercentage, "Countries", "From which countries most guests come?");
 
 
