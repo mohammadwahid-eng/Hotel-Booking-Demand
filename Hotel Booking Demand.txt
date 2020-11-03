@@ -1,3 +1,4 @@
+!pip install pycountry
 import pandas as pd
 import pycountry as pyc
  
@@ -40,33 +41,34 @@ def showGraph(x, y, xLabel, mTitle):
     y = "Percentage",
     xlabel = xLabel,
     title = mTitle,
-    figsize=(10, 6)
+    figsize=(12, 6),
+    color='#502959'
   );
 
 
 
 # isCanceled, bookingPercentage = calculation(booking.is_canceled);
-# showGraph(isCanceled, bookingPercentage, "Booking Cancelled (No = 0, Yes = 1)", "Ratio between booking canceled and not canceled.");
+# showGraph(isCanceled, bookingPercentage, "Booking Cancelled (No = 0, Yes = 1)", "Booking cancellation ratio of hotels.");
 
 
 booking = booking[booking.is_canceled==0]
 
 
 # hotelTypes, bookingPercentage = calculation(data.hotel);
-# showGraph(hotelTypes, bookingPercentage, "Hotel Types", "Which type of hotel has demand?");
+# showGraph(hotelTypes, bookingPercentage, "Hotel Types", "Hotel has most demand.");
 
 
 
 
 # bookingYears, bookingPercentage = calculation(data.arrival_date_year);
-# showGraph(bookingYears, bookingPercentage, "Booking Years", "Booking comparison by Year");
+# showGraph(bookingYears, bookingPercentage, "Booking Years", "Booking comparison by year");
 
 
 
 
 # countries, bookingPercentage = calculation(booking.country, 10);
 # countries = [pyc.countries.get(alpha_3=code).name for code in countries]
-# showGraph(countries, bookingPercentage, "Countries", "From which countries most guests come?");
+# showGraph(countries, bookingPercentage, "Countries", "Countries from which most guests come.");
 
 
 
@@ -75,7 +77,7 @@ booking = booking[booking.is_canceled==0]
 # monthsData = booking.arrival_date_month.value_counts().reindex(monthsName);
 # bookingMonths = monthsData.index
 # bookingPercentage = (monthsData/monthsData.sum())*100
-# showGraph(bookingMonths, bookingPercentage, "Months", "Which is the busiest month for hotels?");
+# showGraph(bookingMonths, bookingPercentage, "Months", "Busiest month for hotels.");
 
 
 
@@ -86,11 +88,11 @@ booking = booking[booking.is_canceled==0]
 # accomodationTypes = ["Single", "Couple", "Family"]
 # accomodationCount = [single.shape[0], couple.shape[0], family.shape[0]]
 # bookingPercentage = [(total/booking.shape[0])*100 for total in accomodationCount]
-# showGraph(accomodationTypes, bookingPercentage, "Accomodation Types", "Which is the most booked accomodation type?");
+# showGraph(accomodationTypes, bookingPercentage, "Accomodation Types", "Most booked accommodation type.");
 
 
 
 
 # nights = booking.stays_in_week_nights + booking.stays_in_weekend_nights
 # numberOfNights, stayingPercentage = calculation(nights, 10);
-# showGraph(numberOfNights, stayingPercentage, "Number of Nights", "How long guests stay in the hotel?");
+# showGraph(numberOfNights, stayingPercentage, "Number of Nights", "How many nights guests stay in the hotel?");
